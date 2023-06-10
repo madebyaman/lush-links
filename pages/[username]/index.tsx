@@ -1,6 +1,5 @@
-import { FiTrash } from 'react-icons/fi';
 import NextLink from 'next/link';
-import * as data from '../../data.json';
+import data from '../../data.json';
 import ProfileSectionWrapper from '@/components/profile-section-wrapper';
 import RainbowBackground from '@/components/rainbow-bg';
 import { Text, Box, Heading, Link, Avatar } from '@chakra-ui/react';
