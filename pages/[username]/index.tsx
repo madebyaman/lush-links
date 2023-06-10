@@ -70,7 +70,7 @@ export default function Page({ user }: { user: ILushSite }) {
       <Head>
         <title>{user.name} Links</title>
       </Head>
-      <ProfileSectionWrapper padding="4rem 2rem" w="sm">
+      <ProfileSectionWrapper padding="4rem 2rem" w="full" maxW="sm">
         <Avatar
           name={user.name}
           src={user.profile_picture_url}

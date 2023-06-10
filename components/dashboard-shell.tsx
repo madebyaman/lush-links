@@ -34,7 +34,7 @@ const DashboardShell = ({
   }
 
   return (
-    <Box backgroundColor="gray.100" minH="100vh">
+    <Box backgroundColor="gray.100" minH="100vh" w="full">
       <Flex backgroundColor="white" mb={16} w="full">
         <Flex
           alignItems="center"
@@ -98,9 +98,14 @@ const DashboardShell = ({
           </Flex>
         </Flex>
       </Flex>
-      <Flex margin="0 auto" direction="column" maxW="1250px" px={8}>
-        <Flex justifyContent={title ? 'center' : 'space-between'}>
-          <Heading mb={8}>{title ? title : 'My Lush Link'}</Heading>
+      <Flex margin="0 auto" direction={'column'} maxW="1250px" px={8}>
+        <Flex
+          flexDirection={['column', 'row']}
+          mb="8"
+          gap="2"
+          justifyContent={title ? 'center' : 'space-between'}
+        >
+          <Heading>{title ? title : 'My Lush Link'}</Heading>
           {!title && (
             <Button
               as="a"

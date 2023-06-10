@@ -186,7 +186,8 @@ export default function Home() {
       >
         <ProfileSectionWrapper
           padding="2rem"
-          w="sm"
+          w="full"
+          maxW="sm"
           display={'flex'}
           alignSelf={'flex-start'}
           flexDirection={'column'}
@@ -216,7 +217,7 @@ export default function Home() {
           )}
 
           <Stack spacing={'4'}>
-            <HStack spacing="0.2rem">
+            <Flex gap="0.2rem" flexDirection={['column', 'row']}>
               <FormControl>
                 <FormLabel>
                   Name
@@ -250,7 +251,7 @@ export default function Home() {
                   )}
                 </FormLabel>
               </FormControl>
-            </HStack>
+            </Flex>
 
             <FormControl>
               <FormLabel>
