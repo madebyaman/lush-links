@@ -1,34 +1,68 @@
-import NextLink from 'next/link';
-import data from '../../data.json';
 import ProfileSectionWrapper from '@/components/profile-section-wrapper';
 import RainbowBackground from '@/components/rainbow-bg';
-import { Text, Box, Heading, Link, Avatar } from '@chakra-ui/react';
+import { Text, Box, Heading, Link, Avatar, Button } from '@chakra-ui/react';
 import { SiFacebook, SiInstagram, SiTwitter, SiYoutube } from 'react-icons/si';
 import Head from 'next/head';
+import { getAllLinkSites, getUserLinkSite } from '@/lib/db-admin';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { ILushSite } from '@/types/types';
 
 export const getStaticProps = async ({
   params,
 }: {
   params: { username: string };
 }) => {
-  const user = data.find((user) => user.username === params.username);
+  const { username } = params;
+  const user = await getUserLinkSite(username);
   if (!user) {
-    return { notFound: true };
+    return {
+      notFound: true,
+    };
   }
-  return { props: { user } };
+  return {
+    props: {
+      user: user,
+    },
+  };
 };
 
 export const getStaticPaths = async () => {
-  const usernames = data.map((user) => user.username);
+  const { sites } = await getAllLinkSites();
+  const paths = sites.map((site) => ({
+    params: { username: site.username.toString() },
+  }));
 
   return {
-    paths: usernames.map((username) => ({ params: { username } })),
+    paths,
     fallback: 'blocking',
   };
 };
 
-export default function Page({ user }: { user: (typeof data)[0] }) {
-  if (!user) {
+export default function Page({ user }: { user: ILushSite }) {
+  useEffect(() => {
+    const data = {
+      event: 'pageview',
+      username: user.username,
+      time: new Date(),
+    };
+
+    const jsonData = JSON.stringify(data);
+    navigator.sendBeacon('/api/analytics', jsonData);
+  }, [user.username]);
+
+  function buttonClick(url: string) {
+    const data = {
+      event: 'click',
+      time: new Date(),
+      username: user.username,
+      url: url,
+    };
+
+    const jsonData = JSON.stringify(data);
+    navigator.sendBeacon('/api/analytics', jsonData);
+    const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
+    if (newWindow) newWindow.opener = null;
   }
 
   return (
@@ -36,10 +70,10 @@ export default function Page({ user }: { user: (typeof data)[0] }) {
       <Head>
         <title>{user.name} Links</title>
       </Head>
-      <ProfileSectionWrapper padding="4rem 2rem" maxW="sm">
+      <ProfileSectionWrapper padding="4rem 2rem" w="sm">
         <Avatar
           name={user.name}
-          src={user.profile_image_url}
+          src={user.profile_picture_url}
           size={'xl'}
           mb="4"
         />
@@ -53,7 +87,7 @@ export default function Page({ user }: { user: (typeof data)[0] }) {
           {user.bio}
         </Text>
         <Box display={'flex'} gap={'4'} justifyContent={'flex-start'}>
-          {user.social.map((item, i) => {
+          {user.social_links?.map((item, i) => {
             return (
               <Text
                 key={`site-${i}`}
@@ -64,16 +98,17 @@ export default function Page({ user }: { user: (typeof data)[0] }) {
                 fontSize={'md'}
                 mb="4"
               >
-                <Link
-                  href={`https://${item.site}.com/${item.username}`}
+                <Button
+                  onClick={() =>
+                    buttonClick(`https://${item.site}.com/${item.username}`)
+                  }
                   fontSize={'lg'}
-                  isExternal
                 >
                   {item.site.toLowerCase() === 'twitter' && <SiTwitter />}
                   {item.site.toLowerCase() === 'youtube' && <SiYoutube />}
                   {item.site.toLowerCase() === 'facebook' && <SiFacebook />}
                   {item.site.toLowerCase() === 'instagram' && <SiInstagram />}
-                </Link>
+                </Button>
               </Text>
             );
           })}
@@ -87,8 +122,14 @@ export default function Page({ user }: { user: (typeof data)[0] }) {
         width="full"
         maxW="xl"
       >
-        {user.lush_links.map((link) => (
-          <NextLink href={link.url} target="_blank" key={link.id}>
+        {user.lush_links?.map((link) => (
+          <Box
+            as="button"
+            onClick={() => {
+              buttonClick(link.url);
+            }}
+            key={link.id}
+          >
             <ProfileSectionWrapper
               margin={'0 auto'}
               w="full"
@@ -101,10 +142,9 @@ export default function Page({ user }: { user: (typeof data)[0] }) {
                 bg: 'gray.50',
               }}
             >
-              {link.icon && <Avatar size="xs" src={link.icon} />}
               <Text>{link.title}</Text>
             </ProfileSectionWrapper>
-          </NextLink>
+          </Box>
         ))}
       </Box>
     </RainbowBackground>
