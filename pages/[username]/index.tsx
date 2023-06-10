@@ -1,8 +1,17 @@
+import { FiTrash } from 'react-icons/fi';
 import NextLink from 'next/link';
 import * as data from '@/data.json';
 import ProfileSectionWrapper from '@/components/profile-section-wrapper';
 import RainbowBackground from '@/components/rainbow-bg';
-import { Text, Box, Heading, Link, Avatar } from '@chakra-ui/react';
+import {
+  Text,
+  Box,
+  Heading,
+  Link,
+  Avatar,
+  IconButton,
+  Icon,
+} from '@chakra-ui/react';
 import { SiFacebook, SiInstagram, SiTwitter, SiYoutube } from 'react-icons/si';
 
 export const getStaticProps = async ({
@@ -31,12 +40,7 @@ export default function Page({ user }: { user: (typeof data)[0] }) {
   }
 
   return (
-    <RainbowBackground
-      display={'flex'}
-      gap="2rem"
-      alignItems={'flex-start'}
-      justifyContent={'center'}
-    >
+    <RainbowBackground>
       <ProfileSectionWrapper padding="4rem 2rem" maxW="sm">
         <Avatar
           name={user.name}

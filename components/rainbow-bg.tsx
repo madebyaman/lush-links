@@ -11,6 +11,11 @@ export default function RainbowBackground({
 }: RainbowBackgroundProps) {
   return (
     <Box
+      display={'flex'}
+      flexDirection={['column', 'column', 'row']}
+      gap="2rem"
+      alignItems={'flex-start'}
+      justifyContent={'center'}
       minH={'100vh'}
       w={'full'}
       padding={'5rem 2rem'}

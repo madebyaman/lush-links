@@ -1,10 +1,10 @@
-import PlainBackground from '@/components/plain-bg';
+import { FiTrash } from 'react-icons/fi';
 import ProfileSectionWrapper from '@/components/profile-section-wrapper';
 import {
   Text,
-  Image,
   Heading,
   Input,
+  Image,
   Flex,
   Box,
   Button,
@@ -14,11 +14,104 @@ import {
   HStack,
   InputGroup,
   Stack,
+  IconButton,
 } from '@chakra-ui/react';
+import { useState } from 'react';
+import RainbowBackground from '@/components/rainbow-bg';
 
 export default function Home() {
+  const [state, setState] = useState<{
+    name: string;
+    username: string;
+    bio: string;
+    lush_links: { title: string; url: string; id: string }[];
+    profile_picture_url: string;
+  }>({
+    name: '',
+    username: '',
+    bio: '',
+    lush_links: [],
+    profile_picture_url: '',
+  });
+  const [profilePicture, setProfilePicture] = useState<File | undefined>();
+  const [link, setLink] = useState<{ id?: string; title: string; url: string }>(
+    {
+      title: '',
+      url: '',
+    }
+  );
+
+  function updateLink() {
+    if (link.id) {
+      changeLink(link.id, link.url, link.title);
+    } else {
+      setState({
+        ...state,
+        lush_links: [
+          ...state.lush_links,
+          { ...link, id: Date.now().toString() },
+        ],
+      });
+    }
+    setLink({
+      title: '',
+      url: '',
+    });
+  }
+
+  function changeLink(id: string, url: string, title: string) {
+    setState({
+      ...state,
+      lush_links: state.lush_links.map((link) => {
+        if (link.id === id) {
+          return {
+            ...link,
+            url: url,
+            title: title,
+          };
+        }
+        return link;
+      }),
+    });
+  }
+
+  function handleChange(e: any) {
+    setState({
+      ...state,
+      [e.target.name]: e.target.value,
+    });
+  }
+
+  function saveChanges() {
+    console.log(state);
+  }
+
   return (
-    <PlainBackground>
+    <RainbowBackground>
+      <Box
+        position={'fixed'}
+        top="0"
+        right={0}
+        left={0}
+        padding={'0.5rem'}
+        background={'white'}
+        width="full"
+        shadow={'sm'}
+      >
+        <Flex
+          maxW={'container.lg'}
+          margin={'0 auto'}
+          justifyContent={'space-between'}
+          alignItems={'center'}
+        >
+          <Heading as="h1" letterSpacing={'tight'} fontSize={'xl'}>
+            Create new link page
+          </Heading>
+          <Button colorScheme="teal" onClick={saveChanges}>
+            Save Changes
+          </Button>
+        </Flex>
+      </Box>
       <ProfileSectionWrapper
         padding="2rem"
         maxW="sm"
@@ -90,6 +183,8 @@ export default function Home() {
                   zIndex: -1,
                   left: 0,
                   top: 0,
+                  right: 0,
+                  bottom: 0,
                   opacity: 0,
                 }}
                 type="file"
@@ -102,19 +197,15 @@ export default function Home() {
         </Flex>
 
         <Stack spacing={'4'}>
-          <HStack spacing="1rem">
+          <HStack spacing="0.2rem">
             <FormControl>
               <FormLabel>
                 Name
                 <Input
-                  // value={state.name}
                   placeholder="Your Name"
-                  // onChange={(e) =>
-                  //   dispatch({
-                  //     type: 'UPDATE_NAME',
-                  //     payload: e.target.value,
-                  //   })
-                  // }
+                  name="name"
+                  value={state.name}
+                  onChange={handleChange}
                 />
               </FormLabel>
             </FormControl>
@@ -123,15 +214,11 @@ export default function Home() {
                 Username
                 <InputGroup>
                   <Input
-                    // value={state.username}
                     type="text"
-                    // onChange={(e) =>
-                    //   dispatch({
-                    //     type: 'UPDATE_USERNAME',
-                    //     payload: e.target.value,
-                    //   })
-                    // }
-                    // onBlur={onUsernameBlur}
+                    placeholder="username"
+                    name="username"
+                    value={state.username}
+                    onChange={handleChange}
                   />
                 </InputGroup>
               </FormLabel>
@@ -142,30 +229,72 @@ export default function Home() {
             <FormLabel>
               Your Bio
               <Textarea
-                // value={state.bio}
                 placeholder="Your bio"
-                // onChange={(e) =>
-                //   dispatch({
-                //     type: 'UPDATE_BIO',
-                //     payload: e.target.value,
-                //   })
-                // }
+                name="bio"
+                value={state.bio}
+                onChange={handleChange}
               />
             </FormLabel>
           </FormControl>
         </Stack>
-        <Button
-          type="submit"
-          // isLoading={state.loading}
-          // disabled={!state.usernameValid}
-          // mt="6"
-        >
-          Save Changes
-        </Button>
       </ProfileSectionWrapper>
-      <ProfileSectionWrapper width="full" maxW="xl" padding="2rem">
-        Hello
-      </ProfileSectionWrapper>
-    </PlainBackground>
+      <Box width="full" maxW="xl">
+        {state.lush_links.map((l) => (
+          <Box
+            key={l.id}
+            mb="4"
+            cursor={'pointer'}
+            onClick={() => {
+              setLink(l);
+            }}
+          >
+            <ProfileSectionWrapper
+              margin={'0 auto'}
+              padding="2rem"
+              display={'flex'}
+              alignItems={'center'}
+              justifyContent={'space-between'}
+              gap="2"
+              _hover={{
+                bg: 'gray.50',
+              }}
+            >
+              <Text>{l.title}</Text>
+              <IconButton
+                aria-label="Delete"
+                onClick={() => {
+                  const newLinks = state.lush_links.filter(
+                    (l) => l.id !== link.id
+                  );
+                  setState({
+                    ...state,
+                    lush_links: newLinks,
+                  });
+                }}
+              >
+                <FiTrash />
+              </IconButton>
+            </ProfileSectionWrapper>
+          </Box>
+        ))}
+        <ProfileSectionWrapper p="2rem">
+          <Flex flexDirection={'column'} gap="4">
+            <Input
+              value={link.title}
+              placeholder="Link text"
+              onChange={(e) => setLink({ ...link, title: e.target.value })}
+            />
+            <Input
+              value={link.url}
+              placeholder="Link URL"
+              onChange={(e) => setLink({ ...link, url: e.target.value })}
+            />
+            <Button onClick={updateLink} alignSelf={'flex-start'}>
+              {link.id ? 'Update Link' : 'Add Link'}
+            </Button>
+          </Flex>
+        </ProfileSectionWrapper>
+      </Box>
+    </RainbowBackground>
   );
 }
