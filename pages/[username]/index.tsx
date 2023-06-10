@@ -13,6 +13,7 @@ import {
   Icon,
 } from '@chakra-ui/react';
 import { SiFacebook, SiInstagram, SiTwitter, SiYoutube } from 'react-icons/si';
+import Head from 'next/head';
 
 export const getStaticProps = async ({
   params,
@@ -41,6 +42,9 @@ export default function Page({ user }: { user: (typeof data)[0] }) {
 
   return (
     <RainbowBackground>
+      <Head>
+        <title>{user.name} Links</title>
+      </Head>
       <ProfileSectionWrapper padding="4rem 2rem" maxW="sm">
         <Avatar
           name={user.name}

@@ -4,7 +4,6 @@ import {
   Text,
   Heading,
   Input,
-  Image,
   Flex,
   Box,
   Button,
@@ -18,6 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import RainbowBackground from '@/components/rainbow-bg';
+import Head from 'next/head';
 
 export default function Home() {
   const [state, setState] = useState<{
@@ -88,6 +88,9 @@ export default function Home() {
 
   return (
     <RainbowBackground>
+      <Head>
+        <title>Create new link page</title>
+      </Head>
       <Box
         position={'fixed'}
         top="0"
