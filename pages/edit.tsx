@@ -304,7 +304,7 @@ export default function Home() {
                     onClick={(e) => {
                       e.stopPropagation();
                       const newLinks = state.lush_links.filter(
-                        (l) => l.id !== link.id
+                        (link) => l.id !== link.id
                       );
                       setState({
                         ...state,
