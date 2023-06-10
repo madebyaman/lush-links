@@ -99,7 +99,7 @@ const DashboardShell = ({
         </Flex>
       </Flex>
       <Flex margin="0 auto" direction="column" maxW="1250px" px={8}>
-        <Flex justifyContent="space-between">
+        <Flex justifyContent={title ? 'center' : 'space-between'}>
           <Heading mb={8}>{title ? title : 'My Lush Link'}</Heading>
           {!title && (
             <Button

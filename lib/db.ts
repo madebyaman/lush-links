@@ -22,3 +22,10 @@ export async function getUserLinkPage(uid: string) {
 
   return doc;
 }
+
+export async function checkUsernameAvailability(username: string) {
+  const q = query(collection(db, 'links'), where('username', '==', username))
+  const querySnapshot = await getDocs(q)
+
+  return querySnapshot.empty;
+}

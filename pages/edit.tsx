@@ -21,7 +21,11 @@ import {
 import { ChangeEvent, useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useAuth } from '@/lib/auth';
-import { createOrUpdateLink, getUserLinkPage } from '@/lib/db';
+import {
+  checkUsernameAvailability,
+  createOrUpdateLink,
+  getUserLinkPage,
+} from '@/lib/db';
 import DashboardShell from '@/components/dashboard-shell';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '@/lib/firebase';
@@ -95,7 +99,7 @@ export default function Home() {
     });
   }
 
-  function saveChanges() {
+  async function saveChanges() {
     if (!auth?.user) {
       toast({
         title: "You're not logged in",
@@ -103,9 +107,18 @@ export default function Home() {
       });
       return;
     }
+    const username = state.username.toLowerCase();
+    const usernameAvailable = await checkUsernameAvailability(username);
+    if (!usernameAvailable) {
+      toast({
+        title: 'Username is not available',
+        status: 'error',
+      });
+      return;
+    }
     try {
-      const newLink = { ...state, userId: auth?.user.uid };
-      createOrUpdateLink(state.username, newLink);
+      const newLink = { ...state, userId: auth?.user.uid, username };
+      createOrUpdateLink(username, newLink);
       toast({
         title: 'Changes saved',
         status: 'success',
@@ -175,6 +188,7 @@ export default function Home() {
           padding="2rem"
           w="sm"
           display={'flex'}
+          alignSelf={'flex-start'}
           flexDirection={'column'}
           gap="4"
         >
