@@ -1,18 +1,17 @@
 import DashboardShell from '@/components/dashboard-shell';
+import DashboardStat from '@/components/dashboard-stat';
 import EmptyState from '@/components/empty-state';
 import { useAuth } from '@/lib/auth';
 import { IAnalyticsData } from '@/types/types';
 import {
   Box,
   Skeleton,
-  Stat,
-  StatLabel,
-  StatNumber,
   Table,
   TableContainer,
   Tbody,
   Td,
   Th,
+  Text,
   Thead,
   Tr,
 } from '@chakra-ui/react';
@@ -25,6 +24,11 @@ export default function Dashboard() {
     data: IAnalyticsData | null;
   }>({ status: 'INIT', data: null });
   const user = useAuth();
+
+  const totalClicks = analyticsData.data?.clickCounts?.reduce(
+    (acc, curr) => acc + curr.count,
+    0
+  );
 
   useEffect(() => {
     let mounted = true;
@@ -60,85 +64,20 @@ export default function Dashboard() {
         width="full"
         gap="6"
       >
-        <Stat>
-          <Box
-            shadow={'md'}
-            backgroundColor={'white'}
-            padding={'1rem'}
-            rounded={'md'}
-            display={'flex'}
-            flexDirection={'row'}
-            alignItems={'flex-start'}
-            gap="1rem"
-          >
-            <Box
-              rounded={'md'}
-              border={'1px solid'}
-              h={'3rem'}
-              w={'3rem'}
-              display={'grid'}
-              placeContent={'center'}
-              backgroundColor="gray.600"
-              color="white"
-            >
-              <FiUser size="1.5rem" />
-            </Box>
-            <Box>
-              <StatLabel color="gray.500">Pageviews</StatLabel>
-              <StatNumber fontSize={'lg'}>
-                {analyticsData.status === 'LOADING' ? (
-                  <Skeleton height="1.5rem" width="6rem" />
-                ) : analyticsData.data?.pageviewCount ? (
-                  analyticsData.data?.pageviewCount
-                ) : (
-                  'No data'
-                )}
-              </StatNumber>
-            </Box>
-          </Box>
-        </Stat>
-
-        <Stat>
-          <Box
-            shadow={'md'}
-            backgroundColor={'white'}
-            padding={'1rem'}
-            rounded={'md'}
-            display={'flex'}
-            flexDirection={'row'}
-            alignItems={'flex-start'}
-            gap="1rem"
-          >
-            <Box
-              rounded={'md'}
-              backgroundColor={'gray.600'}
-              h={'3rem'}
-              w={'3rem'}
-              display={'grid'}
-              placeContent={'center'}
-              color="white"
-            >
-              <FiMousePointer size="1.5rem" />
-            </Box>
-            <Box>
-              <StatLabel color="gray.500">Clicks</StatLabel>
-              <StatNumber fontSize={'lg'}>
-                {analyticsData.status === 'LOADING' ? (
-                  <Skeleton height="1.5rem" width="6rem" />
-                ) : analyticsData.data?.clickCounts?.length ? (
-                  analyticsData.data?.clickCounts?.reduce(
-                    (prev, cur) => prev + cur.count,
-                    0
-                  )
-                ) : (
-                  'No data'
-                )}
-              </StatNumber>
-            </Box>
-          </Box>
-        </Stat>
+        <DashboardStat
+          label={'Total Pageviews'}
+          icon={<FiUser size="1.5rem" />}
+          loading={analyticsData.status === 'LOADING'}
+          data={analyticsData.data?.pageviewCount}
+        />
+        <DashboardStat
+          label={'Total clicks'}
+          icon={<FiMousePointer size="1.5rem" />}
+          loading={analyticsData.status === 'LOADING'}
+          data={totalClicks}
+        />
       </Box>
-      {analyticsData.data ? (
+      {analyticsData.status === 'LOADING' ? (
         <TableContainer mt="4rem">
           <Table variant="simple">
             <Thead>
@@ -148,17 +87,60 @@ export default function Dashboard() {
               </Tr>
             </Thead>
             <Tbody>
-              {analyticsData.data?.clickCounts?.map((item, i) => (
-                <Tr key={`link-${i}`}>
-                  <Td>{item.url}</Td>
-                  <Td>{item.count}</Td>
-                </Tr>
-              ))}
+              <Tr>
+                <Td>
+                  <Skeleton height="10px" width={'30rem'} />
+                </Td>
+                <Td>
+                  <Skeleton height="10px" width="5rem" />
+                </Td>
+              </Tr>
+              <Tr>
+                <Td>
+                  <Skeleton height="10px" width="30rem" />
+                </Td>
+                <Td>
+                  <Skeleton height="10px" width="5rem" />
+                </Td>
+              </Tr>
             </Tbody>
           </Table>
         </TableContainer>
       ) : (
-        <EmptyState />
+        <>
+          {!analyticsData.data && (
+            <Box mb="4">
+              <EmptyState />
+            </Box>
+          )}
+          {Array.isArray(analyticsData.data?.clickCounts) &&
+          analyticsData.data?.clickCounts.length ? (
+            <TableContainer mt="4rem">
+              <Table variant="simple">
+                <Thead>
+                  <Tr>
+                    <Th>Link</Th>
+                    <Th>Clicks</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {analyticsData.data?.clickCounts?.map((item, i) => (
+                    <Tr key={`link-${i}`}>
+                      <Td>
+                        <Text isTruncated>
+                          {item.url.length > 70
+                            ? item.url.substring(0, 70) + '...'
+                            : item.url}
+                        </Text>
+                      </Td>
+                      <Td>{item.count}</Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </TableContainer>
+          ) : null}
+        </>
       )}
     </DashboardShell>
   );

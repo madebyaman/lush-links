@@ -72,9 +72,16 @@ export async function setAnalyticsData(data: any) {
 }
 
 export async function getUserLinkSite(username: string) {
-  const docRef = db.collection('links').doc(username)
-  const data = await docRef.get().then(doc => doc.data())
-  return data
+  try {
+
+    const docRef = db.collection('users').where('username', '==', username)
+    const data = await docRef.get().then(doc => doc.docs[0].data())
+    const uid = data.uid
+    const linkSite = await db.collection('links').doc(uid).get().then(doc => doc.data())
+    return linkSite
+  } catch (e) {
+    return null
+  }
 }
 
 export async function getAllLinkSites() {

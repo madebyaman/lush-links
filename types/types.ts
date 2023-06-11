@@ -4,6 +4,7 @@ export interface IUser {
   name: string | null,
   provider: string,
   photoUrl: string | null
+  username?: string | null
 };
 
 export interface ILushSite {

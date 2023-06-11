@@ -1,24 +1,8 @@
-import React from 'react';
-import {
-  Box,
-  Heading,
-  Button,
-  Flex,
-  Link,
-  Avatar,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverBody,
-  PopoverHeader,
-  PopoverCloseButton,
-  ButtonGroup,
-  PopoverFooter,
-  Text,
-} from '@chakra-ui/react';
+import { Avatar, Box, Flex, Heading, Link } from '@chakra-ui/react';
+import React, { useEffect } from 'react';
 
 import { useAuth } from '@/lib/auth';
-import { FiLogOut } from 'react-icons/fi';
+import PrimaryButton from './primary-button';
 
 const DashboardShell = ({
   title,
@@ -29,9 +13,11 @@ const DashboardShell = ({
 }) => {
   const user = useAuth();
 
-  if (!user?.loading && !user?.user) {
-    window.location.href = '/';
-  }
+  useEffect(() => {
+    if (!user?.loading && !user?.user) {
+      window.location.href = '/';
+    }
+  }, [user?.loading, user?.user]);
 
   return (
     <Box backgroundColor="gray.100" minH="100vh" w="full">
@@ -47,54 +33,43 @@ const DashboardShell = ({
           px={8}
         >
           <Flex>
-            <Link href={`/dashboard`} mr="4">
+            <Link
+              href={`/dashboard`}
+              borderRadius={'md'}
+              p="2"
+              _hover={{ bg: 'gray.100', textDecoration: 'none' }}
+              mr="4"
+            >
               Dashboard
             </Link>
-            <Link href="/edit">Edit</Link>
+            <Link
+              borderRadius={'md'}
+              p="2"
+              _hover={{ bg: 'gray.100', textDecoration: 'none' }}
+              mr="4"
+              href="/edit"
+            >
+              Edit
+            </Link>
+            <Link
+              borderRadius={'md'}
+              p="2"
+              _hover={{ bg: 'gray.100', textDecoration: 'none' }}
+              mr="4"
+              href={`/${user?.user?.username}`}
+            >
+              View Link Page
+            </Link>
           </Flex>
           <Flex justifyContent="center" alignItems="center">
-            <Popover>
-              {({ onClose }) => (
-                <>
-                  <PopoverTrigger>
-                    <button>
-                      <Avatar
-                        size="sm"
-                        src={user?.user?.photoUrl ?? undefined}
-                      />
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent boxShadow={'md'}>
-                    <PopoverHeader border="0">
-                      <Text fontWeight={'semibold'}>Hi {user?.user?.name}</Text>
-                    </PopoverHeader>
-                    <PopoverCloseButton />
-                    <PopoverBody>Do you want to logout?</PopoverBody>
-                    <PopoverFooter display="flex" justifyContent="flex-end">
-                      <ButtonGroup size="sm">
-                        <Button variant="outline" onClick={onClose}>
-                          Cancel
-                        </Button>
-                        <Button
-                          onClick={() => user?.signout()}
-                          backgroundColor="gray.900"
-                          color="white"
-                          fontWeight="medium"
-                          leftIcon={<FiLogOut />}
-                          _hover={{ bg: 'gray.700' }}
-                          _active={{
-                            bg: 'gray.800',
-                            transform: 'scale(0.95)',
-                          }}
-                        >
-                          Logout
-                        </Button>
-                      </ButtonGroup>
-                    </PopoverFooter>
-                  </PopoverContent>
-                </>
-              )}
-            </Popover>
+            <Link
+              href="/profile"
+              p="1"
+              borderRadius={'full'}
+              _hover={{ backgroundColor: 'gray.300' }}
+            >
+              <Avatar size="sm" src={user?.user?.photoUrl ?? undefined} />
+            </Link>
           </Flex>
         </Flex>
       </Flex>
@@ -107,20 +82,14 @@ const DashboardShell = ({
         >
           <Heading>{title ? title : 'My Lush Link'}</Heading>
           {!title && (
-            <Button
+            <PrimaryButton
               as="a"
               href="/edit"
-              backgroundColor="gray.900"
-              color="white"
-              fontWeight="medium"
-              _hover={{ bg: 'gray.700' }}
-              _active={{
-                bg: 'gray.800',
-                transform: 'scale(0.95)',
-              }}
+              backgroundColor={'gray.700'}
+              _hover={{ bgColor: 'gray.600' }}
             >
               + Edit lush link
-            </Button>
+            </PrimaryButton>
           )}
         </Flex>
 

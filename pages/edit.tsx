@@ -10,8 +10,6 @@ import {
   FormLabel,
   Textarea,
   FormControl,
-  HStack,
-  InputGroup,
   Stack,
   IconButton,
   Avatar,
@@ -21,19 +19,13 @@ import {
 import { ChangeEvent, useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useAuth } from '@/lib/auth';
-import {
-  checkUsernameAvailability,
-  createOrUpdateLink,
-  getUserLinkPage,
-} from '@/lib/db';
+import { createOrUpdateLink, getUserLinkPage } from '@/lib/db';
 import DashboardShell from '@/components/dashboard-shell';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { storage } from '@/lib/firebase';
 import { uploadImage } from '@/lib/uploadImage';
+import PrimaryButton from '@/components/primary-button';
 
 const initialState = {
   name: '',
-  username: '',
   bio: '',
   lush_links: [],
   profile_picture_url: '',
@@ -43,7 +35,6 @@ export default function Home() {
   const toast = useToast();
   const [state, setState] = useState<{
     name: string;
-    username: string;
     bio: string;
     lush_links: { title: string; url: string; id: string }[];
     profile_picture_url: string;
@@ -107,18 +98,13 @@ export default function Home() {
       });
       return;
     }
-    const username = state.username.toLowerCase();
-    const usernameAvailable = await checkUsernameAvailability(username);
-    if (!usernameAvailable) {
-      toast({
-        title: 'Username is not available',
-        status: 'error',
-      });
-      return;
-    }
     try {
-      const newLink = { ...state, userId: auth?.user.uid, username };
-      createOrUpdateLink(username, newLink);
+      const newLink = {
+        ...state,
+        userId: auth?.user.uid,
+        username: auth.user.username,
+      };
+      createOrUpdateLink(auth.user.uid, newLink);
       toast({
         title: 'Changes saved',
         status: 'success',
@@ -154,7 +140,6 @@ export default function Home() {
           setState({
             ...state,
             name: data?.name ?? '',
-            username: data?.username ?? '',
             bio: data?.bio ?? '',
             lush_links: data?.lush_links ?? [],
             profile_picture_url: data?.profile_picture_url ?? '',
@@ -217,41 +202,21 @@ export default function Home() {
           )}
 
           <Stack spacing={'4'}>
-            <Flex gap="0.2rem" flexDirection={['column', 'row']}>
-              <FormControl>
-                <FormLabel>
-                  Name
-                  {state.status === 'LOADING' ? (
-                    <Skeleton height="2rem" width="full" />
-                  ) : (
-                    <Input
-                      placeholder="Your Name"
-                      name="name"
-                      value={state.name}
-                      onChange={handleChange}
-                    />
-                  )}
-                </FormLabel>
-              </FormControl>
-              <FormControl>
-                <FormLabel>
-                  Username
-                  {state.status === 'LOADING' ? (
-                    <Skeleton height="2rem" width="full" />
-                  ) : (
-                    <InputGroup>
-                      <Input
-                        type="text"
-                        placeholder="username"
-                        name="username"
-                        value={state.username}
-                        onChange={handleChange}
-                      />
-                    </InputGroup>
-                  )}
-                </FormLabel>
-              </FormControl>
-            </Flex>
+            <FormControl>
+              <FormLabel>
+                Name
+                {state.status === 'LOADING' ? (
+                  <Skeleton height="2rem" width="full" />
+                ) : (
+                  <Input
+                    placeholder="Your Name"
+                    name="name"
+                    value={state.name}
+                    onChange={handleChange}
+                  />
+                )}
+              </FormLabel>
+            </FormControl>
 
             <FormControl>
               <FormLabel>
@@ -269,9 +234,7 @@ export default function Home() {
               </FormLabel>
             </FormControl>
           </Stack>
-          <Button colorScheme="teal" onClick={saveChanges}>
-            Publish Changes
-          </Button>
+          <PrimaryButton onClick={saveChanges}>Publish Changes</PrimaryButton>
         </ProfileSectionWrapper>
         <Box width="full" maxW="xl">
           {state.status === 'LOADING' ? (

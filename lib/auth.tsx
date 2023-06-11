@@ -9,7 +9,11 @@ import { auth } from './firebase';
 import { GoogleAuthProvider, User, signInWithPopup } from 'firebase/auth';
 import { IUser } from '@/types/types';
 import { useRouter } from 'next/router';
-import { createOrUpdateUser } from './db';
+import {
+  checkUsernameAvailability,
+  createOrUpdateUser,
+  getUserProfile,
+} from './db';
 
 const authContext = createContext<{
   user: IUser | null;
@@ -32,9 +36,10 @@ function useProvideAuth() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const handleUser = (rawUser: User | null) => {
+  const handleUser = async (rawUser: User | null) => {
     if (rawUser) {
-      const user = formatUser(rawUser);
+      const userProfile = await getUserProfile(rawUser.uid);
+      const user = await formatUser(rawUser, userProfile?.username);
       createOrUpdateUser(user.uid, user);
       setLoading(false);
       setUser(user);
@@ -75,12 +80,29 @@ function useProvideAuth() {
   };
 }
 
-function formatUser(user: User): IUser {
+async function formatUser(user: User, username: string): Promise<IUser> {
+  let tempUsername = '';
+  if (!username) {
+    let tempUsername =
+      user.email?.split('@')[0] ??
+      user.displayName?.replace(/\s+/g, '-').toLowerCase() ??
+      '';
+    const usernameAvailable = await checkUsernameAvailability(
+      tempUsername,
+      user.uid
+    );
+
+    if (!usernameAvailable) {
+      tempUsername += `${Math.floor(Math.random() * 1000)}`;
+    }
+  }
+
   return {
     uid: user.uid,
     email: user.email,
     name: user.displayName,
     provider: user.providerData[0].providerId,
     photoUrl: user.photoURL,
+    username: username ?? tempUsername,
   };
 }
