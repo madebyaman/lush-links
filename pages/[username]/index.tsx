@@ -1,12 +1,11 @@
 import ProfileSectionWrapper from '@/components/profile-section-wrapper';
 import RainbowBackground from '@/components/rainbow-bg';
-import { Text, Box, Heading, Link, Avatar, Button } from '@chakra-ui/react';
-import { SiFacebook, SiInstagram, SiTwitter, SiYoutube } from 'react-icons/si';
-import Head from 'next/head';
 import { getAllLinkSites, getUserLinkSite } from '@/lib/db-admin';
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
 import { ILushSite } from '@/types/types';
+import { Avatar, Box, Button, Heading, Text } from '@chakra-ui/react';
+import Head from 'next/head';
+import { useEffect } from 'react';
+import { SiFacebook, SiInstagram, SiTwitter, SiYoutube } from 'react-icons/si';
 
 export const getStaticProps = async ({
   params,
@@ -29,9 +28,11 @@ export const getStaticProps = async ({
 
 export const getStaticPaths = async () => {
   const { sites } = await getAllLinkSites();
-  const paths = sites.map((site) => ({
-    params: { username: site.username.toString() },
-  }));
+  const paths = sites
+    .filter((site) => site.username)
+    .map((site) => ({
+      params: { username: site.username.toString() },
+    }));
 
   return {
     paths,

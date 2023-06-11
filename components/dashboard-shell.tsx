@@ -56,7 +56,7 @@ const DashboardShell = ({
               p="2"
               _hover={{ bg: 'gray.100', textDecoration: 'none' }}
               mr="4"
-              href={`/profile/${user?.user?.username}`}
+              href={`/${user?.user?.username}`}
             >
               View Link Page
             </Link>
