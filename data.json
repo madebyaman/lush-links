@@ -82,7 +82,7 @@
     "id": 1,
     "username": "ldavinci",
     "name": "Leonardo da Vinci",
-    "profile_image_url": "https://upload.wikimedia.org/wikipedia/commons/2/2d/Leonardo_da_Vinci_-_Portrait.jpg",
+    "profile_image_url": "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcT5Kgg1RnlEarSfN2dSR6lxFxG1vS5QtLdnnqBPTiFaNDVm4CTX_v9SP4SzbquTqKQIIlUEnTZTxxzDwS8",
     "bio": "Renaissance polymath: artist, scientist, engineer, and inventor. Unveil my world through these links.",
     "social": [{
       "site": "twitter",
@@ -101,31 +101,86 @@
     "lush_links": [
       {
         "id": 1,
-        "title": "Discover the Mystery of Mona Lisa",
+        "title": "Discover the Mystery of Mona Lisa 🔍",
         "url": "https://monalisa.com"
       },
       {
         "id": 2,
-        "title": "Uncover the Story of The Last Supper",
+        "title": "Uncover the Story of The Last Supper 🍽️",
         "url": "https://thelastsupper.com",
         "icon": "https://icon-library.com/images/link-icon-png/link-icon-png-16.jpg"
       },
       {
         "id": 3,
-        "title": "Explore the Genius of Vitruvian Man",
+        "title": "Explore the Genius of Vitruvian Man 🧠",
         "url": "https://vitruvianman.com"
       },
       {
         "id": 4,
-        "title": "Dive into the World of Leonardo's Inventions",
+        "title": "Dive into the World of Leonardo's Inventions 💡",
         "url": "https://davinciinventions.com"
       },
       {
         "id": 5,
-        "title": "Experience the Renaissance with Leonardo",
+        "title": "Experience the Renaissance with Leonardo 🎨",
         "url": "https://renaissancewithleonardo.com",
+        "icon": "https://icon-library.com/images/link-icon-png/link-icon-png-16.jpg"
+      }
+
+    ]
+  },
+  {
+    "id": 2,
+    "username": "aeinstein",
+    "name": "Albert Einstein",
+    "profile_image_url": "https://upload.wikimedia.org/wikipedia/commons/d/d3/Albert_Einstein_Head.jpg",
+    "bio": "Physicist, philosopher, and explorer of the universe. Follow my links to delve into the mysteries of physics and my life's work.",
+    "social": [{
+      "site": "twitter",
+      "username": "aeinstein"
+    }, {
+      "site": "instagram",
+      "username": "aeinstein"
+    }, {
+      "site": "youtube",
+      "username": "aeinstein"
+    }, {
+      "site": "facebook",
+      "username": "aeinstein"
+    }
+    ],
+    "lush_links": [
+      {
+        "id": 1,
+        "title": "Learn about the Theory of Relativity",
+        "url": "https://example.com/theory-of-relativity",
+        "icon": "https://icon-library.com/images/link-icon-png/link-icon-png-16.jpg"
+      },
+      {
+        "id": 2,
+        "title": "Dive into E=mc^2",
+        "url": "https://example.com/emc2",
+        "icon": "https://icon-library.com/images/link-icon-png/link-icon-png-16.jpg"
+      },
+      {
+        "id": 3,
+        "title": "Discover Einstein's Thought Experiments",
+        "url": "https://example.com/thought-experiments",
+        "icon": "https://icon-library.com/images/link-icon-png/link-icon-png-16.jpg"
+      },
+      {
+        "id": 4,
+        "title": "Explore the Einstein Archives",
+        "url": "https://www.alberteinstein.info/",
+        "icon": "https://icon-library.com/images/link-icon-png/link-icon-png-16.jpg"
+      },
+      {
+        "id": 5,
+        "title": "Uncover the History of Quantum Physics",
+        "url": "https://example.com/quantum-physics",
         "icon": "https://icon-library.com/images/link-icon-png/link-icon-png-16.jpg"
       }
     ]
   }
+
 ]
