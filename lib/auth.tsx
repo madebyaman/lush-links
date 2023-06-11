@@ -39,7 +39,7 @@ function useProvideAuth() {
   const handleUser = async (rawUser: User | null) => {
     if (rawUser) {
       const userProfile = await getUserProfile(rawUser.uid);
-      const user = await formatUser(rawUser, userProfile?.username);
+      const user = await formatUser(rawUser, userProfile);
       createOrUpdateUser(user.uid, user);
       setLoading(false);
       setUser(user);
@@ -80,9 +80,12 @@ function useProvideAuth() {
   };
 }
 
-async function formatUser(user: User, username: string): Promise<IUser> {
+async function formatUser(
+  user: User,
+  profile?: Record<string, string> | null
+): Promise<IUser> {
   let tempUsername = '';
-  if (!username) {
+  if (!profile?.username) {
     let tempUsername =
       user.email?.split('@')[0] ??
       user.displayName?.replace(/\s+/g, '-').toLowerCase() ??
@@ -100,9 +103,9 @@ async function formatUser(user: User, username: string): Promise<IUser> {
   return {
     uid: user.uid,
     email: user.email,
-    name: user.displayName,
+    name: profile?.name ?? user.displayName,
     provider: user.providerData[0].providerId,
     photoUrl: user.photoURL,
-    username: username ?? tempUsername,
+    username: profile?.username ?? tempUsername,
   };
 }
