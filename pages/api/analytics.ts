@@ -1,7 +1,13 @@
 import { setAnalyticsData } from "@/lib/db-admin";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const data = req.body;
-  setAnalyticsData(JSON.parse(data)).then(() => res.status(200).json({ message: 'OK' })).catch((error) => res.status(500).json({ error: error.message }));
+  try {
+    await setAnalyticsData(JSON.parse(data))
+    return res.status(200).json({ message: 'OK' })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Something went wrong' })
+  }
 }

@@ -25,7 +25,6 @@ import { uploadImage } from '@/lib/uploadImage';
 import PrimaryButton from '@/components/primary-button';
 
 const initialState = {
-  name: '',
   bio: '',
   lush_links: [],
   profile_picture_url: '',
@@ -34,7 +33,6 @@ const initialState = {
 export default function Home() {
   const toast = useToast();
   const [state, setState] = useState<{
-    name: string;
     bio: string;
     lush_links: { title: string; url: string; id: string }[];
     profile_picture_url: string;
@@ -139,7 +137,6 @@ export default function Home() {
         .then((data) =>
           setState({
             ...state,
-            name: data?.name ?? '',
             bio: data?.bio ?? '',
             lush_links: data?.lush_links ?? [],
             profile_picture_url: data?.profile_picture_url ?? '',
@@ -202,22 +199,6 @@ export default function Home() {
           )}
 
           <Stack spacing={'4'}>
-            <FormControl>
-              <FormLabel>
-                Name
-                {state.status === 'LOADING' ? (
-                  <Skeleton height="2rem" width="full" />
-                ) : (
-                  <Input
-                    placeholder="Your Name"
-                    name="name"
-                    value={state.name}
-                    onChange={handleChange}
-                  />
-                )}
-              </FormLabel>
-            </FormControl>
-
             <FormControl>
               <FormLabel>
                 Your Bio

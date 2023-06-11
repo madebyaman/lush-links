@@ -2,9 +2,9 @@ import db, { admin } from './firebaseAdmin'
 import { Timestamp } from 'firebase/firestore';
 
 export async function getUsername(uid: string) {
-  const docRef = db.collection('links').where('userId', '==', uid)
-  const data = await docRef.get().then(doc => doc.docs[0].data())
-  return data.username
+  const docRef = db.collection('users').doc(uid)
+  const data = await docRef.get().then(doc => doc.data())
+  return data?.username
 }
 
 export async function getAllAnalyticsData(username: string, from: 'all' | 'last-week' | 'last-month' | 'last-year' =
@@ -78,14 +78,14 @@ export async function getUserLinkSite(username: string) {
     const data = await docRef.get().then(doc => doc.docs[0].data())
     const uid = data.uid
     const linkSite = await db.collection('links').doc(uid).get().then(doc => doc.data())
-    return linkSite
+    return { ...linkSite, name: data.name, username: data.username }
   } catch (e) {
     return null
   }
 }
 
 export async function getAllLinkSites() {
-  const snapshot = await db.collection('links').get()
+  const snapshot = await db.collection('users').get()
   const sites: any[] = []
 
   snapshot.forEach(doc => {
