@@ -8,6 +8,7 @@ import {
   Box,
   Flex,
 } from '@chakra-ui/react';
+import Head from 'next/head';
 import { SiFacebook, SiInstagram, SiTwitter, SiYoutube } from 'react-icons/si';
 
 const daVinci = data[1];
@@ -33,6 +34,9 @@ export default function Page() {
       minW="100vw"
       p={'3rem 0'}
     >
+      <Head>
+        <title>{daVinci.name} Links</title>
+      </Head>
       <Container>
         <Flex justifyContent={'center'} mb="4">
           <Avatar

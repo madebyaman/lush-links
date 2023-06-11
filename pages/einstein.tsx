@@ -9,6 +9,7 @@ import {
   Box,
   Flex,
 } from '@chakra-ui/react';
+import Head from 'next/head';
 import { SiFacebook, SiInstagram, SiTwitter, SiYoutube } from 'react-icons/si';
 
 const einstein = data[2];
@@ -16,6 +17,9 @@ const einstein = data[2];
 export default function Page() {
   return (
     <Box pos={'relative'} minH={'100vh'} minW="100vw">
+      <Head>
+        <title>{einstein.name} Links</title>
+      </Head>
       <BackgroundSVG />
       <Box p="3rem 0">
         <Container borderBottom="1px solid" borderColor={'gray.100'}>
