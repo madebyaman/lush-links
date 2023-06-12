@@ -16,7 +16,7 @@ const einstein = data[2];
 
 export default function Page() {
   return (
-    <Box pos={'relative'} minH={'100vh'} minW="100vw">
+    <Box pos={'relative'} className="fadeInUp" minH={'100vh'} minW="100vw">
       <Head>
         <title>{einstein.name} Links</title>
       </Head>
@@ -65,7 +65,6 @@ export default function Page() {
                 boxShadow={'2px 2px 0px black'}
                 transition={'all 0.2s ease-in-out'}
                 _hover={{
-                  bg: 'gray.50',
                   boxShadow: '4px 4px 0px 0px black',
                 }}
               >

@@ -28,6 +28,7 @@ function randomHSL() {
 export default function Page() {
   return (
     <Box
+      className="fadeInUp"
       backgroundColor={'yellow.300'}
       color="black"
       minH={'100vh'}
@@ -97,7 +98,6 @@ export default function Page() {
                   backgroundColor: randomHSL(),
                 }}
                 _hover={{
-                  bg: 'gray.50',
                   boxShadow: '4px 4px 0px 0px black',
                 }}
               >
