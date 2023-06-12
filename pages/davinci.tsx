@@ -28,7 +28,7 @@ function randomHSL() {
 export default function Page() {
   return (
     <Box
-      className="fadeInUp"
+      className="zoomIn"
       backgroundColor={'yellow.300'}
       color="black"
       minH={'100vh'}
