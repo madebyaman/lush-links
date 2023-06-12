@@ -1,7 +1,7 @@
 import BackgroundSVG from '@/components/bg-svg';
 import * as data from '@/data.json';
 import {
-  Avatar,
+  Image,
   Text,
   Container,
   Heading,
@@ -20,44 +20,31 @@ export default function Page() {
       <Head>
         <title>{einstein.name} Links</title>
       </Head>
-      <BackgroundSVG />
-      <Box p="3rem 0">
-        <Container borderBottom="1px solid" borderColor={'gray.100'}>
-          <Flex justifyContent={'center'} mb="8">
-            <Avatar
+      <Box p="3rem 0" bgColor="gray.50">
+        <BackgroundSVG />
+        <Container borderBottom="1px solid" borderColor={'gray.300'}>
+          <Flex justifyContent={'center'} mb="6">
+            <Image
               src={einstein.profile_image_url}
-              size="2xl"
-              border="2px solid black"
+              alt={einstein.name}
+              border="4px solid black"
+              boxSize={'2xs'}
+              objectFit={'cover'}
               borderRadius={'lg'}
-              boxShadow={'md'}
+              boxShadow={'2xl'}
             />
           </Flex>
           <Flex justifyContent={'center'}>
-            <Heading
-              as="h1"
-              mb="4"
-              fontSize={'4xl'}
-              display={'inline-block'}
-              bgColor="gray.50"
-              transform={'skew(-5deg)'}
-              p="2"
-            >
+            <Heading as="h1" mb="3" fontSize={'4xl'} display={'inline-block'}>
               {einstein.name}
             </Heading>
           </Flex>
-          <Text
-            fontSize={'lg'}
-            mb="8"
-            lineHeight={'tall'}
-            letterSpacing={'wide'}
-            color="gray.600"
-            textAlign={'center'}
-          >
+          <Text fontSize={'lg'} mb="6" color="gray.600" textAlign={'center'}>
             {einstein.bio}
           </Text>
         </Container>
       </Box>
-      <Container>
+      <Container mt="6">
         <Flex gap="6" flexDir={'column'}>
           {einstein.lush_links?.map((link) => (
             <Box

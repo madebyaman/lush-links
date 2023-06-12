@@ -3,7 +3,6 @@ export default function BackgroundSVG() {
     <svg
       aria-hidden="true"
       style={{
-        zIndex: -1,
         position: 'absolute',
         left: 0,
         top: 0,
